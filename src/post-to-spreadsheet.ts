@@ -6,13 +6,18 @@ function doPost(
     const formData = e.parameter;
     const name = formData.name;
     const email = formData.email;
+    const type = formData.type;
 
-    if (!name || !email) {
-      throw new Error("Name and email are required.");
+    if (!name || !email || !type) {
+      throw new Error("Name, email, and type are required.");
     }
 
-    const ID = config.SPREADSHEET_ID;
-    const NAME = config.SHEET_NAME;
+    if (!config[type]) {
+      throw new Error(`Invalid type: ${type}`);
+    }
+
+    const ID = config[type].SPREADSHEET_ID;
+    const NAME = config[type].SHEET_NAME;
     const sheet = SpreadsheetApp.openById(ID).getSheetByName(NAME);
 
     if (!sheet) {
