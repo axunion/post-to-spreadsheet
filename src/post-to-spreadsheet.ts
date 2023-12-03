@@ -4,12 +4,20 @@ function doPost(
 ): GoogleAppsScript.Content.TextOutput {
   try {
     const formData = e.parameter;
+    const recaptcha = formData.recaptcha;
+
+    if (!verifyRecaptcha(recaptcha)) {
+      throw new Error("reCAPTCHA verification failed.");
+    }
+
     const name = formData.name;
     const email = formData.email;
     const type = formData.type;
 
-    if (!name || !email || !type) {
-      throw new Error("Name, email, and type are required.");
+    if (!name || !email || !type || !recaptcha) {
+      throw new Error(
+        "Name, email, type, and recaptcha_response are required.",
+      );
     }
 
     if (!config[type]) {
