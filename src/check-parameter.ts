@@ -1,4 +1,4 @@
-interface CheckResponse {
+interface CheckResult {
   values: string[];
   errors: string[];
 }
@@ -7,15 +7,15 @@ interface CheckResponse {
 function checkParameter(
   parameter: Record<string, string>,
   acceptedRows: Row[],
-): CheckResponse {
+): CheckResult {
   const values: string[] = [];
   const errors: string[] = [];
 
-  for (const accepted of acceptedRows) {
-    const label = accepted.label;
-    const pattern = accepted.pattern;
-    const maxLength = accepted.maxLength;
-    const required = accepted.required;
+  for (const row of acceptedRows) {
+    const label = row.label;
+    const pattern = row.pattern;
+    const maxLength = row.maxLength;
+    const required = row.required;
     const value = parameter[label];
 
     if (required && (value === undefined || value === "")) {

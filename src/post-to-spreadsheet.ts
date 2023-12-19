@@ -1,4 +1,4 @@
-interface PostResponse {
+interface Response {
   status: "done" | "error";
   error?: string;
 }
@@ -7,7 +7,7 @@ interface PostResponse {
 function doPost(
   e: GoogleAppsScript.Events.DoPost,
 ): GoogleAppsScript.Content.TextOutput {
-  const response: PostResponse = { status: "done" };
+  const response: Response = { status: "done" };
 
   try {
     const timestamp = Date.now();
@@ -32,17 +32,23 @@ function doPost(
       throw new Error(`Invalid Parameter "${errors.join('", "')}"`);
     }
 
-    const prop = PropertiesService.getScriptProperties().getProperties();
-    const verifyResult = verifyRecaptcha(prop.RECAPTCHA_SECRET, recaptcha);
+    const props = PropertiesService.getScriptProperties().getProperties();
+    const secret = props.RECAPTCHA_SECRET;
+    const sheetId = props[`SPREADSHEET_ID_${type}`];
+
+    if (!secret || !sheetId) {
+      throw new Error(`Invalid script properties.`);
+    }
+
+    const verifyResult = verifyRecaptcha(props.RECAPTCHA_SECRET, recaptcha);
 
     if (!verifyResult.success) {
       const errorCodes = verifyResult["error-codes"];
       throw new Error(`reCAPTCHA verification failed."\n"${errorCodes}`);
     }
 
-    const id = prop[`SPREADSHEET_ID_${type}`];
     const name = config.sheetName;
-    const sheet = SpreadsheetApp.openById(id).getSheetByName(name);
+    const sheet = SpreadsheetApp.openById(sheetId).getSheetByName(name);
 
     if (!sheet) {
       throw new Error(`Sheet "${name}" not found.`);
