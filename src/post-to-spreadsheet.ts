@@ -14,35 +14,34 @@ function doPost(
     const parameter = e.parameter;
     const type = parameter.type;
     const recaptcha = parameter.recaptcha;
+    const config = configs[type];
 
     Logger.log(`${timestamp} ${JSON.stringify(parameter)}`);
 
-    if (!config[type]) {
+    if (!config) {
       throw new Error(`Invalid type "${type}"`);
     }
 
-    if (timestamp > new Date(config[type].expiryDate).getTime()) {
+    if (timestamp > new Date(config.expiryDate).getTime()) {
       throw new Error(`This form has expired.`);
     }
 
-    const { values, errors } = checkParameter(parameter, config[type].rows);
+    const { values, errors } = checkParameter(parameter, config.rows);
 
     if (errors.length > 0) {
       throw new Error(`Invalid Parameter "${errors.join('", "')}"`);
     }
 
     const prop = PropertiesService.getScriptProperties().getProperties();
-    const { success, "error-codes": errorCodes } = verifyRecaptcha(
-      prop.RECAPTCHA_SECRET,
-      recaptcha,
-    );
+    const verifyResult = verifyRecaptcha(prop.RECAPTCHA_SECRET, recaptcha);
 
-    if (!success) {
+    if (!verifyResult.success) {
+      const errorCodes = verifyResult["error-codes"];
       throw new Error(`reCAPTCHA verification failed."\n"${errorCodes}`);
     }
 
     const id = prop[`SPREADSHEET_ID_${type}`];
-    const name = config[type].sheetName;
+    const name = config.sheetName;
     const sheet = SpreadsheetApp.openById(id).getSheetByName(name);
 
     if (!sheet) {

@@ -5,14 +5,10 @@ interface Row {
   required?: boolean;
 }
 
-interface Item {
+interface Config {
   sheetName: string;
   expiryDate: string;
   rows: Row[];
-}
-
-interface Config {
-  [key: string]: Item;
 }
 
 const anyPattern = /(?:^\S+$)|(?:^\S.*\S$)/;
@@ -21,7 +17,7 @@ const emailPattern =
   /^[a-zA-Z0-9.!#$%&\\'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const config: Config = {
+const configs: Record<string, Config> = {
   "202505": {
     sheetName: "Data",
     expiryDate: "2025/03/31",

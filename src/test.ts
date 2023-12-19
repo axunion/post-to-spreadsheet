@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function test() {
+function _doPost() {
   const testEventData = {
     parameter: {
       type: "000000",
@@ -13,11 +13,11 @@ function test() {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function testCheckParameter() {
+function _checkParameter() {
   const parameter = {
     name: "test",
     email: "test@test.com",
   };
 
-  Logger.log(checkParameter(parameter, config["202402"].rows));
+  Logger.log(checkParameter(parameter, configs["202402"].rows));
 }
