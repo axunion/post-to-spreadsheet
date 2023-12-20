@@ -11,18 +11,18 @@ interface Config {
   rows: Row[];
 }
 
-const anyPattern = /(?:^\S+$)|(?:^\S.*\S$)/;
-const telPattern = /^[0-9]{3,4}$/;
-const emailPattern =
-  /^[a-zA-Z0-9.!#$%&\\'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
-
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const configs: Record<string, Config> = {
   "202505": {
     sheetName: "Data",
     expiryDate: "2025/03/31",
     rows: [
-      { label: "name", pattern: anyPattern, maxLength: 128, required: true },
+      {
+        label: "name",
+        pattern: INPUT_PATTERNS.ANY,
+        maxLength: 128,
+        required: true,
+      },
       { label: "kind", pattern: /a|b|c/ },
     ],
   },
@@ -31,7 +31,12 @@ const configs: Record<string, Config> = {
     sheetName: "Data",
     expiryDate: "2024/01/31",
     rows: [
-      { label: "name", pattern: anyPattern, maxLength: 128, required: true },
+      {
+        label: "name",
+        pattern: INPUT_PATTERNS.ANY,
+        maxLength: 128,
+        required: true,
+      },
       { label: "kind", pattern: /a|b|c/ },
     ],
   },
@@ -41,11 +46,16 @@ const configs: Record<string, Config> = {
     expiryDate: "2038/01/19 03:14:17",
     rows: [
       { label: "kind", pattern: /a|b|c/ },
-      { label: "name", pattern: anyPattern, maxLength: 128, required: true },
-      { label: "email", pattern: emailPattern, required: true },
-      { label: "tel1", pattern: telPattern },
-      { label: "tel2", pattern: telPattern },
-      { label: "tel3", pattern: telPattern },
+      {
+        label: "name",
+        pattern: INPUT_PATTERNS.ANY,
+        maxLength: 128,
+        required: true,
+      },
+      { label: "email", pattern: INPUT_PATTERNS.EMAIL, required: true },
+      { label: "tel1", pattern: INPUT_PATTERNS.NUMERIC },
+      { label: "tel2", pattern: INPUT_PATTERNS.NUMERIC },
+      { label: "tel3", pattern: INPUT_PATTERNS.NUMERIC },
     ],
   },
 };
