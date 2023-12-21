@@ -19,7 +19,7 @@ function doPost(
     Logger.log(`${timestamp} ${JSON.stringify(parameter)}`);
 
     if (!config) {
-      throw new Error(`Invalid type "${type}"`);
+      throw new Error(`Invalid type.`);
     }
 
     if (timestamp > new Date(config.expiryDate).getTime()) {
@@ -47,11 +47,11 @@ function doPost(
       throw new Error(`reCAPTCHA verification failed."\n"${errorCodes}`);
     }
 
-    const name = config.sheetName;
-    const sheet = SpreadsheetApp.openById(sheetId).getSheetByName(name);
+    const spreadSheet = SpreadsheetApp.openById(sheetId);
+    const sheet = spreadSheet.getSheetByName(config.sheetName);
 
     if (!sheet) {
-      throw new Error(`Sheet "${name}" not found.`);
+      throw new Error(`Sheet not found.`);
     }
 
     sheet.appendRow([timestamp, ...values]);
