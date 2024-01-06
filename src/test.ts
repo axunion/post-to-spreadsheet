@@ -19,5 +19,5 @@ function _checkParameter() {
     email: "test@test.com",
   };
 
-  Logger.log(checkParameter(parameter, configs["202402"].rows));
+  Logger.log(checkParameter(parameter, configs["000000"].rows));
 }

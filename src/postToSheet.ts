@@ -12,17 +12,15 @@ function doPost(
   try {
     const timestamp = Date.now();
     const parameter = e.parameter;
-    const type = parameter.type;
-    const recaptcha = parameter.recaptcha;
-    const config = configs[type];
+    const config = configs[parameter.type];
 
     Logger.log(`${timestamp} ${JSON.stringify(parameter)}`);
 
-    if (!config) {
+    if (!parameter.recaptcha) {
+      throw new Error(`reCAPTCHA is required.`);
+    } else if (!config) {
       throw new Error(`Invalid type.`);
-    }
-
-    if (timestamp > new Date(config.expiryDate).getTime()) {
+    } else if (timestamp > new Date(config.expiryDate).getTime()) {
       throw new Error(`This form has expired.`);
     }
 
@@ -34,13 +32,13 @@ function doPost(
 
     const props = PropertiesService.getScriptProperties().getProperties();
     const secret = props.RECAPTCHA_SECRET;
-    const sheetId = props[`SPREADSHEET_ID_${type}`];
+    const sheetId = props[`SPREADSHEET_ID_${parameter.type}`];
 
     if (!secret || !sheetId) {
       throw new Error(`Invalid script properties.`);
     }
 
-    const verifyResult = verifyRecaptcha(props.RECAPTCHA_SECRET, recaptcha);
+    const verifyResult = verifyRecaptcha(secret, parameter.recaptcha);
 
     if (!verifyResult.success) {
       const errorCodes = verifyResult["error-codes"];
