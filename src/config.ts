@@ -1,61 +1,72 @@
 interface Row {
-  label: string;
-  pattern: RegExp;
-  maxLength?: number;
+  name: string;
+  maxlength?: number;
   required?: boolean;
 }
 
 interface Config {
   sheetName: string;
-  expiryDate: string;
+  dueDate: string;
   rows: Row[];
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const configs: Record<string, Config> = {
-  "202505": {
-    sheetName: "Data",
-    expiryDate: "2025/03/31",
-    rows: [
-      {
-        label: "name",
-        pattern: INPUT_PATTERNS.ANY,
-        maxLength: 128,
-        required: true,
-      },
-      { label: "kind", pattern: /a|b|c/ },
-    ],
-  },
-
   "202402": {
     sheetName: "Data",
-    expiryDate: "2024/01/31",
+    dueDate: "2024-02-18",
     rows: [
       {
-        label: "name",
-        pattern: INPUT_PATTERNS.ANY,
-        maxLength: 128,
+        name: "church",
+        maxlength: 128,
         required: true,
       },
-      { label: "kind", pattern: /a|b|c/ },
+      {
+        name: "name",
+        maxlength: 64,
+        required: true,
+      },
+      {
+        name: "kana",
+        maxlength: 64,
+        required: true,
+      },
+      {
+        name: "generation",
+        maxlength: 2,
+        required: true,
+      },
+      {
+        name: "gender",
+        maxlength: 1,
+        required: true,
+      },
+      {
+        name: "status",
+        maxlength: 1,
+        required: true,
+      },
+      {
+        name: "party",
+        maxlength: 1,
+      },
     ],
   },
 
   "000000": {
     sheetName: "Data",
-    expiryDate: "2038/01/19 03:14:17",
+    dueDate: "2038/01/19 03:14:17",
     rows: [
-      { label: "kind", pattern: /a|b|c/ },
+      { name: "kind" },
       {
-        label: "name",
-        pattern: INPUT_PATTERNS.ANY,
-        maxLength: 128,
+        name: "name",
+        maxlength: 128,
         required: true,
       },
-      { label: "email", pattern: INPUT_PATTERNS.EMAIL, required: true },
-      { label: "tel1", pattern: INPUT_PATTERNS.NUMERIC },
-      { label: "tel2", pattern: INPUT_PATTERNS.NUMERIC },
-      { label: "tel3", pattern: INPUT_PATTERNS.NUMERIC },
+      { name: "email", required: true },
+      { name: "tel1" },
+      { name: "tel2" },
+      { name: "tel3" },
     ],
   },
 };

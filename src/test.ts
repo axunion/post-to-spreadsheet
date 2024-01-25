@@ -1,10 +1,13 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function _doPost() {
   const testEventData = {
-    parameter: {
-      type: "000000",
-      name: "test",
-      email: "test@test.com",
+    postData: {
+      type: "application/json",
+      contents: JSON.stringify({
+        type: "000000",
+        name: "test",
+        email: "test@test.com",
+      }),
     },
   } as unknown as GoogleAppsScript.Events.DoPost;
 
