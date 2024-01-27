@@ -5,7 +5,7 @@ interface CheckResult {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function checkParameter(
-  parameter: Record<string, string>,
+  parameter: Record<string, string | unknown[]>,
   acceptedRows: Row[],
 ): CheckResult {
   const values: string[] = [];
@@ -17,15 +17,23 @@ function checkParameter(
     const required = row.required;
     const value = parameter[name];
 
-    if (required && (value === undefined || value === "")) {
-      errors.push(`"${name}" is required.`);
-    } else if (value !== undefined) {
-      if (maxlength && value.length > maxlength) {
+    if (typeof value === "string") {
+      if (required && value === "") {
+        errors.push(`"${name}" is required.`);
+      } else if (maxlength && value.length > maxlength) {
         errors.push(`"${name}" is too long.`);
+      } else {
+        values.push(value);
+      }
+    } else if (Array.isArray(value)) {
+      if (required && value.length === 0) {
+        errors.push(`"${name}" is required.`);
+      } else if (value.some((v) => typeof v !== "string")) {
+        errors.push(`"${name}" contains non-string elements.`);
+      } else {
+        values.push(value.join(","));
       }
     }
-
-    values.push(value || "");
   }
 
   return { values, errors };

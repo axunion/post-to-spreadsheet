@@ -1,5 +1,5 @@
 interface Response {
-  status: "done" | "error";
+  result: "done" | "error";
   error?: string;
 }
 
@@ -7,22 +7,22 @@ interface Response {
 function doPost(
   e: GoogleAppsScript.Events.DoPost,
 ): GoogleAppsScript.Content.TextOutput {
-  const response: Response = { status: "done" };
+  const response: Response = { result: "done" };
 
   try {
-    const timestamp = Date.now();
+    const date = new Date();
     const parameter = JSON.parse(e.postData.contents);
     const type = parameter.type;
     const recaptcha = parameter.recaptcha;
     const config = configs[type];
 
-    Logger.log(`${timestamp} ${e.postData.contents}`);
+    Logger.log(`${date} ${e.postData.contents}`);
 
     if (!config) {
       throw new Error(`Invalid type.`);
     }
 
-    if (timestamp > new Date(config.dueDate).getTime()) {
+    if (date > new Date(config.dueDate)) {
       throw new Error(`This form has expired.`);
     }
 
@@ -54,14 +54,12 @@ function doPost(
       throw new Error(`Sheet not found.`);
     }
 
-    sheet.appendRow([timestamp, ...values]);
+    sheet.appendRow([date, ...values]);
   } catch (error) {
     Logger.log(`Error: ${error.message}`);
-    response.status = "error";
+    response.result = "error";
     response.error = error.message;
   }
 
-  return ContentService.createTextOutput(JSON.stringify(response)).setMimeType(
-    ContentService.MimeType.JSON,
-  );
+  return ContentService.createTextOutput(JSON.stringify(response));
 }

@@ -2,7 +2,6 @@
 function _doPost() {
   const testEventData = {
     postData: {
-      type: "application/json",
       contents: JSON.stringify({
         type: "000000",
         name: "test",
