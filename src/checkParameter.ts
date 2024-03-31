@@ -1,26 +1,23 @@
-interface CheckResult {
+type CheckResult = {
   values: string[];
   errors: string[];
-}
+};
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function checkParameter(
-  parameter: Record<string, string | unknown[]>,
-  acceptedRows: Row[],
+  parameter: Record<string, string | string[]>,
+  acceptedRows: ConfigRow[],
 ): CheckResult {
   const values: string[] = [];
   const errors: string[] = [];
 
-  for (const row of acceptedRows) {
-    const name = row.name;
-    const maxlength = row.maxlength;
-    const required = row.required;
+  for (const { name, maxlength, required } of acceptedRows) {
     const value = parameter[name];
 
     if (typeof value === "string") {
       if (required && value === "") {
         errors.push(`"${name}" is required.`);
-      } else if (maxlength && value.length > maxlength) {
+      } else if (value.length > maxlength) {
         errors.push(`"${name}" is too long.`);
       } else {
         values.push(value);

@@ -4,8 +4,10 @@ function _doPost() {
     postData: {
       contents: JSON.stringify({
         type: "000000",
+        recaptcha: "000000",
+        inquiry: "1",
+        reply: "1",
         name: "test",
-        email: "test@test.com",
       }),
     },
   } as unknown as GoogleAppsScript.Events.DoPost;
@@ -17,9 +19,16 @@ function _doPost() {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function _checkParameter() {
   const parameter = {
-    name: "test",
+    name: "",
     email: "test@test.com",
+    tel: "12345678901234567890",
   };
 
-  Logger.log(checkParameter(parameter, configs["000000"].rows));
+  const configs = [
+    { name: "name", maxlength: 16, required: true },
+    { name: "email", maxlength: 16, required: false },
+    { name: "tel", maxlength: 16, required: false },
+  ];
+
+  Logger.log(checkParameter(parameter, configs));
 }

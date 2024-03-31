@@ -1,7 +1,7 @@
-interface Response {
+type Response = {
   result: "done" | "error";
   error?: string;
-}
+};
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function doPost(
@@ -10,17 +10,25 @@ function doPost(
   const response: Response = { result: "done" };
 
   try {
-    const date = new Date();
     const parameter = JSON.parse(e.postData.contents);
     const type = parameter.type;
     const recaptcha = parameter.recaptcha;
-    const config = configs[type];
 
-    Logger.log(`${date} ${e.postData.contents}`);
-
-    if (!config) {
-      throw new Error(`Invalid type.`);
+    if (!type || !recaptcha) {
+      throw new Error(`Invalid parameter.`);
     }
+
+    const props = PropertiesService.getScriptProperties().getProperties();
+    const secret = props.RECAPTCHA_SECRET;
+    const configSheetId = props[`SPREADSHEET_ID_CONFIG`];
+    const sheetId = props[`SPREADSHEET_ID_${type}`];
+
+    if (!secret || !configSheetId || !sheetId) {
+      throw new Error(`Invalid script properties.`);
+    }
+
+    const config = getConfig(configSheetId, type);
+    const date = new Date();
 
     if (date > new Date(config.dueDate)) {
       throw new Error(`This form has expired.`);
@@ -29,26 +37,18 @@ function doPost(
     const { values, errors } = checkParameter(parameter, config.rows);
 
     if (errors.length > 0) {
-      throw new Error(`Invalid Parameter "${errors.join('", "')}"`);
+      throw new Error(`Invalid Parameter: "${errors.join('", "')}"`);
     }
 
-    const props = PropertiesService.getScriptProperties().getProperties();
-    const secret = props.RECAPTCHA_SECRET;
-    const sheetId = props[`SPREADSHEET_ID_${type}`];
+    const recaptchaResult = verifyRecaptcha(secret, recaptcha);
 
-    if (!secret || !sheetId) {
-      throw new Error(`Invalid script properties.`);
-    }
-
-    const verifyResult = verifyRecaptcha(props.RECAPTCHA_SECRET, recaptcha);
-
-    if (!verifyResult.success) {
-      const errorCodes = verifyResult["error-codes"];
+    if (!recaptchaResult.success) {
+      const errorCodes = recaptchaResult["error-codes"];
       throw new Error(`reCAPTCHA verification failed."\n"${errorCodes}`);
     }
 
-    const spreadSheet = SpreadsheetApp.openById(sheetId);
-    const sheet = spreadSheet.getSheetByName(config.sheetName);
+    const ss = SpreadsheetApp.openById(sheetId);
+    const sheet = ss.getSheetByName("Data");
 
     if (!sheet) {
       throw new Error(`Sheet not found.`);

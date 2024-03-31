@@ -15,7 +15,7 @@ function getConfig(sheetId: string, sheetName: string): Config {
   const sheet = ss.getSheetByName(sheetName);
 
   if (!sheet) {
-    throw new Error(`Sheet with name ${sheetName} not found.`);
+    throw new Error(`Config not found.`);
   }
 
   const data = sheet.getDataRange().getValues();
