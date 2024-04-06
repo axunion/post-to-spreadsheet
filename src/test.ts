@@ -10,9 +10,9 @@ function _doPost() {
         name: "test",
       }),
     },
-  } as unknown as GoogleAppsScript.Events.DoPost;
+  };
 
-  const result = doPost(testEventData);
+  const result = doPost(testEventData as GoogleAppsScript.Events.DoPost);
   Logger.log(result.getContent());
 }
 

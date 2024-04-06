@@ -19,16 +19,13 @@ function getConfig(sheetId: string, sheetName: string): Config {
   }
 
   const data = sheet.getDataRange().getValues();
-  const dueDate = data[0][0];
-
-  const rows: ConfigRow[] = data.slice(2).map((row) => ({
-    name: row[0].toString(),
-    maxlength: typeof row[1] === "number" ? row[1] : 0,
-    required: Boolean(row[2]),
-  }));
 
   return {
-    dueDate,
-    rows,
+    dueDate: data[0][0],
+    rows: data.slice(2).map((row) => ({
+      name: row[0].toString(),
+      maxlength: typeof row[1] === "number" ? row[1] : 0,
+      required: Boolean(row[2]),
+    })),
   };
 }

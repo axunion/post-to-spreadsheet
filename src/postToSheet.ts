@@ -18,10 +18,10 @@ function doPost(
       throw new Error(`Invalid parameter.`);
     }
 
-    const props = PropertiesService.getScriptProperties().getProperties();
-    const secret = props.RECAPTCHA_SECRET;
-    const configSheetId = props[`SPREADSHEET_ID_CONFIG`];
-    const sheetId = props[`SPREADSHEET_ID_${type}`];
+    const properties = PropertiesService.getScriptProperties().getProperties();
+    const secret = properties.RECAPTCHA_SECRET;
+    const configSheetId = properties[`SPREADSHEET_ID_CONFIG`];
+    const sheetId = properties[`SPREADSHEET_ID_${type}`];
 
     if (!secret || !configSheetId || !sheetId) {
       throw new Error(`Invalid script properties.`);
@@ -56,7 +56,6 @@ function doPost(
 
     sheet.appendRow([date, ...values]);
   } catch (error) {
-    Logger.log(`Error: ${error.message}`);
     response.result = "error";
     response.error = error.message;
   }

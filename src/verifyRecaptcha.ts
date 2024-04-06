@@ -8,12 +8,12 @@ type RecaptchaResult = {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function verifyRecaptcha(secret: string, response: string): RecaptchaResult {
-  const URL = "https://www.google.com/recaptcha/api/siteverify";
-  const responseObj = UrlFetchApp.fetch(URL, {
+function verifyRecaptcha(secret: string, recaptcha: string): RecaptchaResult {
+  const url = "https://www.google.com/recaptcha/api/siteverify";
+  const response = UrlFetchApp.fetch(url, {
     method: "post",
-    payload: { secret, response },
+    payload: { secret, recaptcha },
   });
 
-  return JSON.parse(responseObj.getContentText());
+  return JSON.parse(response.getContentText());
 }
