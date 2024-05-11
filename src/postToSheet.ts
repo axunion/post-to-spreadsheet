@@ -34,17 +34,18 @@ function doPost(
       throw new Error(`This form has expired.`);
     }
 
-    const { values, errors } = checkParameter(parameter, config.rows);
+    const checkResult = checkParameter(parameter, config.rows);
 
-    if (errors.length > 0) {
-      throw new Error(`Invalid Parameter: "${errors.join('", "')}"`);
+    if (checkResult.errors.length > 0) {
+      const error = checkResult.errors.join(", ");
+      throw new Error(`Invalid Parameter: ${error}`);
     }
 
     const recaptchaResult = verifyRecaptcha(secret, recaptcha);
 
-    if (!recaptchaResult.success) {
-      const errorCodes = recaptchaResult["error-codes"];
-      throw new Error(`reCAPTCHA verification failed."\n"${errorCodes}`);
+    if (!recaptchaResult.isValid) {
+      const error = recaptchaResult["error-codes"].join(" ");
+      throw new Error(`reCAPTCHA verification failed. ${error}`);
     }
 
     const ss = SpreadsheetApp.openById(sheetId);
@@ -54,7 +55,7 @@ function doPost(
       throw new Error(`Sheet not found.`);
     }
 
-    sheet.appendRow([date, ...values]);
+    sheet.appendRow([date, ...checkResult.values]);
   } catch (error) {
     response.result = "error";
     response.error = error.message;
