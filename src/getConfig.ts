@@ -3,14 +3,13 @@ type Config = {
   rows: ConfigRow[];
 };
 
-type ConfigRow = {
+export type ConfigRow = {
   name: string;
   maxlength: number;
   required: boolean;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getConfig(sheetId: string, sheetName: string): Config {
+export function getConfig(sheetId: string, sheetName: string): Config {
   const ss = SpreadsheetApp.openById(sheetId);
   const sheet = ss.getSheetByName(sheetName);
 

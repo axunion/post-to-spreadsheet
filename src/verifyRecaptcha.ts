@@ -12,8 +12,7 @@ type RecaptchaResponse = {
   "error-codes": string[];
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function verifyRecaptcha(
+export function verifyRecaptcha(
   secret: string,
   recaptcha: string,
 ): VerifyRecaptchaResult {

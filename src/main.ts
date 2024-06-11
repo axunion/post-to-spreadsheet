@@ -1,3 +1,7 @@
+import { getConfig } from "./getConfig";
+import { validateParameters } from "./validateParameters";
+import { verifyRecaptcha } from "./verifyRecaptcha";
+
 type Response = {
   result: "done" | "error";
   error?: string;
