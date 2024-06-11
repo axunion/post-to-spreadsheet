@@ -34,7 +34,7 @@ function doPost(
       throw new Error(`This form has expired.`);
     }
 
-    const checkResult = checkParameter(parameter, config.rows);
+    const checkResult = validateParameters(parameter, config.rows);
 
     if (checkResult.errors.length > 0) {
       const error = checkResult.errors.join(", ");
