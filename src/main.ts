@@ -8,6 +8,23 @@ type Response = {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
+function _doPost() {
+  const testEventData = {
+    postData: {
+      contents: JSON.stringify({
+        type: "000000",
+        recaptcha: "000000",
+        inquiry: "1",
+        reply: "1",
+        name: "test",
+      }),
+    },
+  };
+
+  const result = doPost(testEventData as GoogleAppsScript.Events.DoPost);
+  Logger.log(result.getContent());
+}
+
 function doPost(
   e: GoogleAppsScript.Events.DoPost,
 ): GoogleAppsScript.Content.TextOutput {
