@@ -1,5 +1,6 @@
 type Config = {
   dueDate: Date;
+  sheetId: string;
   rows: ConfigRow[];
 };
 
@@ -21,9 +22,10 @@ export function getConfig(sheetId: string, sheetName: string): Config {
 
   return {
     dueDate: data[0][0],
-    rows: data.slice(2).map((row) => ({
-      name: row[0].toString(),
-      maxlength: typeof row[1] === "number" ? row[1] : 0,
+    sheetId: data[1][0],
+    rows: data.slice(3).map((row) => ({
+      name: row[0] as string,
+      maxlength: parseInt(row[1]) || 0,
       required: Boolean(row[2]),
     })),
   };

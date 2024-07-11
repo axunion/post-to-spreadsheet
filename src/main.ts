@@ -8,23 +8,6 @@ type Response = {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function _doPost() {
-  const testEventData = {
-    postData: {
-      contents: JSON.stringify({
-        type: "000000",
-        recaptcha: "000000",
-        inquiry: "1",
-        reply: "1",
-        name: "test",
-      }),
-    },
-  };
-
-  const result = doPost(testEventData as GoogleAppsScript.Events.DoPost);
-  Logger.log(result.getContent());
-}
-
 function doPost(
   e: GoogleAppsScript.Events.DoPost,
 ): GoogleAppsScript.Content.TextOutput {
@@ -42,9 +25,8 @@ function doPost(
     const properties = PropertiesService.getScriptProperties().getProperties();
     const secret = properties.RECAPTCHA_SECRET;
     const configSheetId = properties[`SPREADSHEET_ID_CONFIG`];
-    const sheetId = properties[`SPREADSHEET_ID_${type}`];
 
-    if (!secret || !configSheetId || !sheetId) {
+    if (!secret || !configSheetId) {
       throw new Error(`Invalid script properties.`);
     }
 
@@ -69,7 +51,7 @@ function doPost(
       throw new Error(`reCAPTCHA verification failed. ${error}`);
     }
 
-    const ss = SpreadsheetApp.openById(sheetId);
+    const ss = SpreadsheetApp.openById(config.sheetId);
     const sheet = ss.getSheetByName("Data");
 
     if (!sheet) {
