@@ -1,7 +1,3 @@
-import { getConfig } from "./getConfig";
-import { validateParameters } from "./validateParameters";
-import { verifyRecaptcha } from "./verifyRecaptcha";
-
 type Response = {
   result: "done" | "error";
   error?: string;
@@ -24,7 +20,7 @@ function doPost(
 
     const properties = PropertiesService.getScriptProperties().getProperties();
     const secret = properties.RECAPTCHA_SECRET;
-    const configSheetId = properties[`SPREADSHEET_ID_CONFIG`];
+    const configSheetId = properties.SPREADSHEET_ID_CONFIG;
 
     if (!secret || !configSheetId) {
       throw new Error(`Invalid script properties.`);
@@ -46,9 +42,10 @@ function doPost(
 
     const recaptchaResult = verifyRecaptcha(secret, recaptcha);
 
-    if (!recaptchaResult.isValid) {
+    if (!recaptchaResult.success || recaptchaResult.score < 0.5) {
+      const score = recaptchaResult.score || "-";
       const error = recaptchaResult["error-codes"].join(" ");
-      throw new Error(`reCAPTCHA verification failed. ${error}`);
+      throw new Error(`reCAPTCHA verification failed. ${score} ${error}`);
     }
 
     const ss = SpreadsheetApp.openById(config.sheetId);

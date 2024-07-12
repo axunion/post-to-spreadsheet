@@ -1,11 +1,10 @@
-import { ConfigRow } from "./getConfig";
-
-export type CheckResult = {
+type CheckResult = {
   values: string[];
   errors: string[];
 };
 
-export function validateParameters(
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function validateParameters(
   parameters: Record<string, string | string[]>,
   acceptedRows: ConfigRow[],
 ): CheckResult {
