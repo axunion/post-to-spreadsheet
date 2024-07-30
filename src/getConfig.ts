@@ -29,9 +29,9 @@ function getConfig(sheetId: string, sheetName: string): Config {
 
   return {
     dueDate: data[0][0],
-    sheetId: data[1][0],
+    sheetId: data[1][0].trim(),
     rows: data.slice(3).map((row) => ({
-      name: row[0] as string,
+      name: row[0].trim(),
       maxlength: parseInt(row[1]) || 0,
       required: Boolean(row[2]),
     })),

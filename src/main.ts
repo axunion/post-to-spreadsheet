@@ -29,7 +29,7 @@ function doPost(
     const config = getConfig(configSheetId, type);
     const date = new Date();
 
-    if (date > new Date(config.dueDate)) {
+    if (date > config.dueDate) {
       throw new Error(`This form has expired.`);
     }
 
