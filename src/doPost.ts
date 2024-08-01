@@ -1,4 +1,4 @@
-type Response = {
+type PostResponse = {
   result: "done" | "error";
   error?: string;
 };
@@ -7,7 +7,7 @@ type Response = {
 function doPost(
   e: GoogleAppsScript.Events.DoPost,
 ): GoogleAppsScript.Content.TextOutput {
-  const response: Response = { result: "done" };
+  const response: PostResponse = { result: "done" };
 
   try {
     const parameter = JSON.parse(e.postData.contents);
