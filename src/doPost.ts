@@ -49,7 +49,7 @@ function doPost(
     }
 
     const ss = SpreadsheetApp.openById(config.sheetId);
-    const sheet = ss.getSheetByName("Data");
+    const sheet = ss.getSheetByName(config.sheetName);
 
     if (!sheet) {
       throw new Error(`Sheet not found.`);

@@ -4,7 +4,7 @@ type GetResponse = {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function _doGet() {
-  const e = { parameter: { type: "0" } };
+  const e = { parameter: { type: "" } };
   const result = doGet(e as unknown as GoogleAppsScript.Events.DoGet);
   console.log(result.getContent());
 }
